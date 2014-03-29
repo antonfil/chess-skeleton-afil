@@ -1,14 +1,7 @@
 package chess;
 
-import chess.Bishop;
-import chess.Figure;
-import chess.King;
-import chess.Knight;
-import chess.Pawn;
-import chess.Player;
-import chess.Position;
-import chess.Queen;
-import chess.Rook;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -24,9 +17,7 @@ public class GameState {
     /**
      * Create the game state.
      */
-    public GameState() {
-    	newGame();
-    }
+    public GameState() {/*newGame();*/}
     
     public void newGame(){
     	for (int i = 0; i < positions.length; i++)
@@ -73,8 +64,25 @@ public class GameState {
     	return positions[position.getRow()-Position.MIN_ROW][position.getColumn()-Position.MIN_COLUMN];
     }
     
+    public Figure getFigureAt(int row, char column) {
+    	return getFigureAt(new Position(row, column));
+    }
+    
     public Figure[][] getPositions() {
     	return positions;
+    }
+    
+    public List<Move> getAvaliableMoves() {
+    	List<Move> avaliableMoves = new ArrayList<Move>();
+    	
+    	for (int i = 0; i < positions.length; i++)
+    		for (int j = 0; j < positions[0].length; j++){
+    			if (positions[i][j] != null && (positions[i][j] instanceof Pawn)){
+    				avaliableMoves.addAll(positions[i][j].getAvailableMoves(this));
+    			}
+    		}
+    	
+    	return avaliableMoves;
     }
 
 }

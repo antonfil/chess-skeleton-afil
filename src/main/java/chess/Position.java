@@ -1,5 +1,7 @@
 package chess;
 
+import chess.Position;
+
 public class Position {
 	
 	public static final int MIN_ROW = 1;
@@ -24,8 +26,14 @@ public class Position {
 		return column;
 	}
 	
-	public boolean equals(Position position){
-		return this.row == position.row && this.column == position.column;
+	@Override
+	public boolean equals(Object position){
+		return (position instanceof Position) && this.row == ((Position)position).row && this.column == ((Position)position).column;
+	}
+	
+	@Override
+	public String toString(){
+		return new StringBuilder().append(column).append(row).toString();
 	}
 	
 }

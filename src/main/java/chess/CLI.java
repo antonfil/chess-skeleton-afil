@@ -1,6 +1,7 @@
 package chess;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * This class provides the basic CLI interface to the Chess game.
@@ -54,14 +55,14 @@ public class CLI {
             } else if (input.equals("help")) {
                 showCommands();
             } else if (input.equals("new")) {
-                gameState = new GameState();
+                gameState.newGame();
             } else if (input.equals("board")) {
                 writeOutput("Current Board State:");
             } else if (input.equals("quit")) {
                 writeOutput("Goodbye!");
                 System.exit(0);
             } else if (input.equals("list")) {
-                writeOutput("Sorry; 'list' is not yet implemented");
+            	writeOutput(writeAvailableMoves(gameState));
             } else if (input.startsWith("move")) {
                 writeOutput("Sorry; 'move' is not yet implemented");
             } else {
@@ -72,7 +73,7 @@ public class CLI {
 
     private void showBoard() {
 
-        writeOutput(getBoardAsString(new GameState()));
+        writeOutput(getBoardAsString(gameState));
     }
 
     private void showCommands() {
@@ -124,6 +125,19 @@ public class CLI {
         }
 
         builder.append(NEWLINE);
+    }
+    
+    private String writeAvailableMoves(GameState gameState){
+    	StringBuilder builder = new StringBuilder();
+    	
+    	List<Move> avaliableMoves = gameState.getAvaliableMoves();
+    	builder.append(NEWLINE);
+    	for (int i = 0; i < avaliableMoves.size(); i++){
+    		builder.append(avaliableMoves.get(i));
+    		builder.append(NEWLINE);
+    	}
+    	
+    	return builder.toString();
     }
 
     public static void main(String[] args) {

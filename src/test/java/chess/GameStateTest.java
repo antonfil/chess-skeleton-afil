@@ -1,6 +1,9 @@
 package chess;
 
+import java.util.List;
+
 import org.junit.Test;
+
 import static junit.framework.Assert.*;
 
 public class GameStateTest {
@@ -8,6 +11,7 @@ public class GameStateTest {
 	@Test
 	public void testNewGameCreation(){
 		GameState gameState = new GameState();
+		gameState.newGame();
 		
 		Position p = new Position(1, 'a'); assertEquals(gameState.getFigureAt(p), new Rook(Player.White, p));
 		p = new Position(1, 'b'); assertEquals(gameState.getFigureAt(p), new Knight(Player.White, p));
@@ -38,6 +42,16 @@ public class GameStateTest {
 		for (int i = 3; i <=6; i++)
 			for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++)
 				assertNull(gameState.getFigureAt(new Position(i,c)));
+	}
+	
+	@Test
+	public void testAvailableMoves(){
+		GameState gameState = new GameState();
+		gameState.newGame();
+		
+		List<Move> avaliableMoves = gameState.getAvaliableMoves();
+		
+		assertEquals(avaliableMoves.size(), (Position.MAX_COLUMN-Position.MIN_COLUMN+1)*2*2);
 	}
 
 }
