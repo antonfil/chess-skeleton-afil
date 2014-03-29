@@ -1,6 +1,7 @@
 package chess;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * This class provides the basic CLI interface to the Chess game.
@@ -54,14 +55,14 @@ public class CLI {
             } else if (input.equals("help")) {
                 showCommands();
             } else if (input.equals("new")) {
-                gameState = new GameState();
+                gameState.newGame();
             } else if (input.equals("board")) {
                 writeOutput("Current Board State:");
             } else if (input.equals("quit")) {
                 writeOutput("Goodbye!");
                 System.exit(0);
             } else if (input.equals("list")) {
-                writeOutput("Sorry; 'list' is not yet implemented");
+            	writeOutput(writeAvailableMoves(gameState));
             } else if (input.startsWith("move")) {
                 writeOutput("Sorry; 'move' is not yet implemented");
             } else {
@@ -72,7 +73,7 @@ public class CLI {
 
     private void showBoard() {
 
-        writeOutput(getBoardAsString());
+        writeOutput(getBoardAsString(gameState));
     }
 
     private void showCommands() {
@@ -88,13 +89,13 @@ public class CLI {
     /**
      * Display the board for the user(s)
      */
-    public String getBoardAsString() {
+    public String getBoardAsString(GameState gameState) {
         StringBuilder builder = new StringBuilder();
 
         printColumnLabels(builder);
-        for (int i = GameState.MAX_ROW; i >= GameState.MIN_ROW; i--) {
+        for (int i = Position.MAX_ROW; i >= Position.MIN_ROW; i--) {
             printSeparator(builder);
-            printSquares(i, builder);
+            printSquares(i, builder, gameState);
         }
 
         printSeparator(builder);
@@ -104,10 +105,11 @@ public class CLI {
     }
 
 
-    private void printSquares(int rowLabel, StringBuilder builder) {
+    private void printSquares(int rowLabel, StringBuilder builder, GameState gameState) {
         builder.append(rowLabel);
-        for (char c = GameState.MIN_COLUMN; c <= GameState.MAX_COLUMN; c++) {
-            builder.append(" |  ");
+        for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++) {
+        	Figure figure = gameState.getFigureAt(new Position(rowLabel, c));
+            builder.append(" | ").append(figure != null ? figure : " ");
         }
         builder.append(" | ").append(rowLabel).append(NEWLINE);
     }
@@ -118,11 +120,24 @@ public class CLI {
 
     private void printColumnLabels(StringBuilder builder) {
         builder.append("   ");
-        for (char c = GameState.MIN_COLUMN; c <= GameState.MAX_COLUMN; c++) {
+        for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++) {
             builder.append(" ").append(c).append("  ");
         }
 
         builder.append(NEWLINE);
+    }
+    
+    private String writeAvailableMoves(GameState gameState){
+    	StringBuilder builder = new StringBuilder();
+    	
+    	List<Move> avaliableMoves = gameState.getAvaliableMoves();
+    	builder.append(NEWLINE);
+    	for (int i = 0; i < avaliableMoves.size(); i++){
+    		builder.append(avaliableMoves.get(i));
+    		builder.append(NEWLINE);
+    	}
+    	
+    	return builder.toString();
     }
 
     public static void main(String[] args) {
