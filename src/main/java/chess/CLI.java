@@ -72,7 +72,7 @@ public class CLI {
 
     private void showBoard() {
 
-        writeOutput(getBoardAsString());
+        writeOutput(getBoardAsString(new GameState()));
     }
 
     private void showCommands() {
@@ -88,13 +88,13 @@ public class CLI {
     /**
      * Display the board for the user(s)
      */
-    public String getBoardAsString() {
+    public String getBoardAsString(GameState gameState) {
         StringBuilder builder = new StringBuilder();
 
         printColumnLabels(builder);
-        for (int i = GameState.MAX_ROW; i >= GameState.MIN_ROW; i--) {
+        for (int i = Position.MAX_ROW; i >= Position.MIN_ROW; i--) {
             printSeparator(builder);
-            printSquares(i, builder);
+            printSquares(i, builder, gameState);
         }
 
         printSeparator(builder);
@@ -104,10 +104,11 @@ public class CLI {
     }
 
 
-    private void printSquares(int rowLabel, StringBuilder builder) {
+    private void printSquares(int rowLabel, StringBuilder builder, GameState gameState) {
         builder.append(rowLabel);
-        for (char c = GameState.MIN_COLUMN; c <= GameState.MAX_COLUMN; c++) {
-            builder.append(" |  ");
+        for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++) {
+        	Figure figure = gameState.getFigureAt(new Position(rowLabel, c));
+            builder.append(" | ").append(figure != null ? figure : " ");
         }
         builder.append(" | ").append(rowLabel).append(NEWLINE);
     }
@@ -118,7 +119,7 @@ public class CLI {
 
     private void printColumnLabels(StringBuilder builder) {
         builder.append("   ");
-        for (char c = GameState.MIN_COLUMN; c <= GameState.MAX_COLUMN; c++) {
+        for (char c = Position.MIN_COLUMN; c <= Position.MAX_COLUMN; c++) {
             builder.append(" ").append(c).append("  ");
         }
 
